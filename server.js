@@ -83,7 +83,7 @@ router.post('/rental_submit', upload.array(), async (req, res) => {
 // })
 
 
-router.get('/:phone', async (req, res) => {
+router.get('/phone/:phone', async (req, res) => {
   console.log('[GET]', '/:phone')
   const phone = req.params.phone
 
