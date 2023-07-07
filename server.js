@@ -5,6 +5,7 @@ const cors = require('cors')
 const multer = require('multer') // v1.0.5
 const upload = multer() // for parsing multipart/form-data
 const app = express()
+const router = express.Router()
 const mongodb_uri = "mongodb+srv://gaorock530:MEIEozSlKAyLInXb@cluster0.wl32kqy.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -16,11 +17,12 @@ const client = new MongoClient(mongodb_uri, {
   }
 });
 
+app.use('/api', router) // load the router on '/greet'
 app.use(cors())
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
-app.post('/rental_submit', upload.array(), async (req, res) => {
+router.post('/rental_submit', upload.array(), async (req, res) => {
   console.log('[POST]', '/rental_submit')
 
   if (!req.body.id) return res.json({ error: 'id missing', status: 4000 })
@@ -81,7 +83,7 @@ app.post('/rental_submit', upload.array(), async (req, res) => {
 // })
 
 
-app.get('/:phone', async (req, res) => {
+router.get('/:phone', async (req, res) => {
   console.log('[GET]', '/:phone')
   const phone = req.params.phone
 
@@ -104,7 +106,7 @@ app.get('/:phone', async (req, res) => {
   }
 })
 
-app.get('/status/:id', async (req, res) => {
+router.get('/status/:id', async (req, res) => {
   console.log('[GET]', '/status/:id')
   const id = req.params.id
 
@@ -126,12 +128,12 @@ app.get('/status/:id', async (req, res) => {
   }
 })
 
-app.get('/all', async (req, res) => {
+arouterpp.get('/all', async (req, res) => {
   console.log('[GET]', '/all')
   res.json({ data: 'all', status: 200 })
 })
 
-app.all('*', (req, res) => {
+router.all('*', (req, res) => {
   res.status(404)
 })
 
