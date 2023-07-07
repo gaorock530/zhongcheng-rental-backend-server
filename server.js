@@ -131,7 +131,7 @@ app.get('/all', async (req, res) => {
   res.json({ data: 'all', status: 200 })
 })
 
-app.get('*', (req, res) => {
+app.all('*', (req, res) => {
   res.status(404)
 })
 
