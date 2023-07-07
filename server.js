@@ -21,9 +21,10 @@ app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 app.post('/rental_submit', upload.array(), async (req, res) => {
+  console.log('[POST]', '/rental_submit')
 
-  if (!req.body.id) return res.json({error: 'id missing', status: 4000})
-  if (!req.body.phone) return res.json({error: 'phone missing', status: 4001})
+  if (!req.body.id) return res.json({ error: 'id missing', status: 4000 })
+  if (!req.body.phone) return res.json({ error: 'phone missing', status: 4001 })
 
   try {
     // Connect the client to the server	(optional starting in v4.7)
@@ -31,9 +32,9 @@ app.post('/rental_submit', upload.array(), async (req, res) => {
     const rental_collection = client.db('wx_rental').collection("rental_requests")
 
     // check phone
-    const phone = await rental_collection.findOne({phone: req.body.phone})
-    if (phone) return res.json({error: 'phone already used', status: 4002})
-    
+    const phone = await rental_collection.findOne({ phone: req.body.phone })
+    if (phone) return res.json({ error: 'phone already used', status: 4002 })
+
     const result = await rental_collection.insertOne({
       id: req.body.id,
       submit_date: Date.now(),
@@ -44,9 +45,9 @@ app.post('/rental_submit', upload.array(), async (req, res) => {
       status: 1 // 1-new request 2-answered 
     })
 
-    res.json({data: result, status: 200})
-  }catch(e) {
-    res.json({error: e.toString(), status: 500})
+    res.json({ data: result, status: 200 })
+  } catch (e) {
+    res.json({ error: e.toString(), status: 500 })
   } finally {
     // Ensures that the client will close when you finish/error
     await client.close();
@@ -62,7 +63,7 @@ app.post('/rental_submit', upload.array(), async (req, res) => {
 //     // console.log("Pinged your deployment. You successfully connected to MongoDB!");
 //     const database = client.db('wx_rental')
 //     const rental_collection = database.collection("rental_requests")
-    
+
 //     await rental_collection.insertMany([
 //       { "name": "apples", "qty": 5, "rating": 3 },
 //       { "name": "bananas", "qty": 7, "rating": 1, "microsieverts": 0.1 },
@@ -81,6 +82,7 @@ app.post('/rental_submit', upload.array(), async (req, res) => {
 
 
 app.get('/:phone', async (req, res) => {
+  console.log('[GET]', '/:phone')
   const phone = req.params.phone
 
   try {
@@ -90,19 +92,20 @@ app.get('/:phone', async (req, res) => {
     const rental_collection = database.collection("rental_requests")
     const findResult = await rental_collection.find({ phone });
     if (findResult) {
-      res.json({data: findResult, status: 200})
+      res.json({ data: findResult, status: 200 })
     } else {
-      res.json({data: null, status: 200})
+      res.json({ data: null, status: 200 })
     }
-  }catch(e) {
-    res.json({error: e.toString(), status: 500})
+  } catch (e) {
+    res.json({ error: e.toString(), status: 500 })
   } finally {
     // Ensures that the client will close when you finish/error
     await client.close();
   }
 })
 
-app.get('/status/:id', async(req, res) => {
+app.get('/status/:id', async (req, res) => {
+  console.log('[GET]', '/status/:id')
   const id = req.params.id
 
   try {
@@ -111,12 +114,12 @@ app.get('/status/:id', async(req, res) => {
     const rental_collection = client.db('wx_rental').collection("rental_requests")
     const findResult = await rental_collection.findOne({ id });
     if (findResult) {
-      res.json({data: findResult, status: 200})
+      res.json({ data: findResult, status: 200 })
     } else {
-      res.json({data: null, status: 200})
+      res.json({ data: null, status: 200 })
     }
-  }catch(e) {
-    res.json({error: e.toString(), status: 500})
+  } catch (e) {
+    res.json({ error: e.toString(), status: 500 })
   } finally {
     // Ensures that the client will close when you finish/error
     await client.close();
@@ -124,7 +127,12 @@ app.get('/status/:id', async(req, res) => {
 })
 
 app.get('/all', async (req, res) => {
-
+  console.log('[GET]', '/all')
+  res.json({ data: 'all', status: 200 })
 })
 
-app.listen(8080, err =>console.log( err || 'Server running on PORT: 8080'))
+app.get('*', (req, res) => {
+  res.status(404)
+})
+
+app.listen(8080, err => console.log(err || 'Server running on PORT: 8080'))
