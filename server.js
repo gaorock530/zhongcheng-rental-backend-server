@@ -128,7 +128,7 @@ router.get('/status/:id', async (req, res) => {
   }
 })
 
-arouterpp.get('/all', async (req, res) => {
+router.get('/all', async (req, res) => {
   console.log('[GET]', '/all')
   res.json({ data: 'all', status: 200 })
 })
