@@ -128,10 +128,14 @@ router.get('/status/:id', async (req, res) => {
   }
 })
 
-router.get('/all', async (req, res) => {
-  console.log('[GET]', '/all')
-  res.json({ data: 'all', status: 200 })
+router.get('/wx_oauth_redirect', async (req, res) => {
+  console.log('[GET]', '/wx_oauth_redirect')
+  console.log(req.params)
+  res.redirect('https://wx.zhongchenggongsi.com/rental')
 })
+
+
+
 
 router.all('*', (req, res) => {
   res.status(404)
