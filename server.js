@@ -8,6 +8,9 @@ const app = express()
 const router = express.Router()
 const mongodb_uri = "mongodb+srv://gaorock530:MEIEozSlKAyLInXb@cluster0.wl32kqy.mongodb.net/?retryWrites=true&w=majority";
 
+const appid = 'wx77b0a2f41edb5837'
+const AppSecret = '9e4977b7d7bf91575a07896e7801761b'
+
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(mongodb_uri, {
   serverApi: {
@@ -131,7 +134,22 @@ router.get('/status/:id', async (req, res) => {
 router.get('/wx_oauth_redirect', async (req, res) => {
   console.log('[GET]', '/wx_oauth_redirect')
   console.log(req.query)
-  res.redirect('https://wx.zhongchenggongsi.com/rental')
+
+  let error
+
+  try {
+    console.log('fetching access token...')
+    const res = await fetch(`https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appid}&secret=${AppSecret}&code=${req.query.code}&grant_type=authorization_code`)
+    const json = await res.json()
+    console.log(json)
+    error = null
+  } catch (e) {
+    error = e.toString()
+  }
+
+
+
+  res.redirect(`https://wx.zhongchenggongsi.com/rental?error=${error}`)
 })
 
 
