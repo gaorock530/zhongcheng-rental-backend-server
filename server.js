@@ -135,8 +135,6 @@ router.get('/wx_oauth_redirect', async (req, res) => {
   console.log('[GET]', '/wx_oauth_redirect')
   console.log(req.query)
 
-  let error
-
   try {
     console.log('fetching access token...')
     const res = await fetch(`https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appid}&secret=${AppSecret}&code=${req.query.code}&grant_type=authorization_code`)
@@ -146,14 +144,16 @@ router.get('/wx_oauth_redirect', async (req, res) => {
     const userRes = await fetch(`https://api.weixin.qq.com/sns/userinfo?access_token=${json.access_token}&openid=${json.openid}&lang=zh_CN`)
     const userJson = await userRes.json()
     console.log(userJson)
-    error = null
+    res.redirect(`https://wx.zhongchenggongsi.com/rental?openid=${userJson.openid}&name=${userJson.nickname}&img=${userJson.headimgurl}`)
   } catch (e) {
-    error = e.toString()
+    const error = e.toString()
+    console.log(error)
+    res.redirect(`https://wx.zhongchenggongsi.com/rental?error=${error}`)
   }
 
 
 
-  res.redirect(`https://wx.zhongchenggongsi.com/rental?error=${error}`)
+
 })
 
 
