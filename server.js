@@ -118,6 +118,7 @@ router.get('/status/:id', async (req, res) => {
     await client.connect();
     const rental_collection = client.db('wx_rental').collection("rental_requests")
     const findResult = await rental_collection.findOne({ id });
+    console.log({ id, findResult })
     if (findResult) {
       res.json({ data: findResult, status: 200 })
     } else {
