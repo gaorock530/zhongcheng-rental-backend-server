@@ -142,6 +142,10 @@ router.get('/wx_oauth_redirect', async (req, res) => {
     const res = await fetch(`https://api.weixin.qq.com/sns/oauth2/access_token?appid=${appid}&secret=${AppSecret}&code=${req.query.code}&grant_type=authorization_code`)
     const json = await res.json()
     console.log(json)
+    console.log('fetch user info...')
+    const userRes = await fetch(`https://api.weixin.qq.com/sns/userinfo?access_token=${json.access_token}&openid=${json.openid}&lang=zh_CN`)
+    const userJson = await userRes.json()
+    console.log(userJson)
     error = null
   } catch (e) {
     error = e.toString()
