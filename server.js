@@ -130,7 +130,7 @@ router.get('/status/:id', async (req, res) => {
 
 router.get('/wx_oauth_redirect', async (req, res) => {
   console.log('[GET]', '/wx_oauth_redirect')
-  console.log(req.params)
+  console.log(req.query)
   res.redirect('https://wx.zhongchenggongsi.com/rental')
 })
 
